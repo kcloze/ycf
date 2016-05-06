@@ -55,11 +55,12 @@ class YcfDB
      */
     private function Connect()
     {
-        $dsn = 'mysql:dbname=' . $this->config["dbname"] . ';host=' . $this->config["host"] . '';
+        $dsn = 'mysql:dbname=' . $this->config["dbname"] . ';host=' . $this->config["host"] . ';charset=utf8';
         try
         {
             # Read settings from INI file, set UTF8
-            $this->pdo = new \PDO($dsn, $this->config["user"], $this->config["password"], array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+            //$this->pdo = new \pdoProxy($dsn, $this->config["user"], $this->config["password"]);
+            $this->pdo = new \PDO($dsn, $this->config["user"], $this->config["password"]);
 
             # We can now log any exceptions on Fatal error.
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

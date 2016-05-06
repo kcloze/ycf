@@ -14,13 +14,21 @@ class YcfCore
 
     public function init($httpServer = null)
     {
-        self::$_settings = parse_ini_file("settings.ini.php", true);
-        self::$_log      = new YcfLog();
+        self::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
+
+        self::$_log = new YcfLog();
         if (!empty($httpServer)) {
             self::$_http_server = $httpServer;
         }
     }
-
+    //封装输出，避免多次输出
+    public static function end($msg)
+    {
+        if (self::$_response) {
+            self::$_response->end($msg);
+            self::$_response = null;
+        }
+    }
     public function run()
     {
 
@@ -50,11 +58,12 @@ class YcfCore
     public function shutdown()
     {
         //echo 'shutdown....';
-        if (!defined('SWOOLE')) {
-            self::$_log->flush();
-        } else {
-            self::$_log->sendTask();
-        }
+        self::$_log->flush();
+        // if (!defined('SWOOLE')) {
+        //     self::$_log->flush();
+        // } else {
+        //     self::$_log->sendTask();
+        // }
     }
 
     public function route()

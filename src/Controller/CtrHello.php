@@ -39,7 +39,7 @@ class CtrHello
     {
         //for ($i = 0; $i < 1000; $i++) {
         YcfCore::$_log->log('hello ycf' . time(), 'info');
-        YcfCore::$_response->end("Greet, Klcoze!");
+        YcfCore::end("Greet, Klcoze!");
         //}
     }
 

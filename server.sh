@@ -1,35 +1,62 @@
 #!/bin/bash
-pidFile="/src/runtime/master_pid";
+pidFile="src/runtime/master.pid";
 
 function start(){
 	php ./src/Core/YcfHttpServer.php $pidFile;
-	php ./pool_server.php start;
+	#php ./src/Core/YcfDBPool.php start;
   
 	#printf $?
 	if [ $? == 0 ]; then
-		printf "qserver start OK\r\n"
+		printf "ycf_server start OK\r\n"
 		return 0
 	else
-		printf "qserver start FAIL\r\n"
+		printf "ycf_server start FAIL\r\n"
 		return 1
 	fi
 }
 
 function stop(){
-	master_pid=$(php -r "echo file_get_contents(realpath(dirname(__FILE__)) . '/src/runtime/master_pid');");
+	master_pid=$(php -r "echo file_get_contents(realpath(dirname(__FILE__)) . '/src/runtime/master.pid');");
 	if [ -n "$master_pid" ];then
 		kill -15 $master_pid;
 		if [ $? == 0 ];then
-			php ./pool_server.php stop
-			php -r "file_put_contents(realpath(dirname(__FILE__)) . '/src/runtime/master_pid','');"
-			printf "qserver stop OK \n"
+			#php ./src/Core/YcfDBPool.php stop
+			php -r "file_put_contents(realpath(dirname(__FILE__)) . '/src/runtime/master.pid','');"
+			printf "ycf_server stop OK \n"
 			return 0
 		fi
 	else
-		printf "qserver stop FAIL\r\n"
+		printf "ycf_server stop FAIL\r\n"
 		return 1	
 	fi
 	
+}
+function startDB(){
+	#php ./src/Core/YcfHttpServer.php $pidFile;
+	php ./src/Core/YcfDBPool.php start;
+  
+	#printf $?
+	if [ $? == 0 ]; then
+		printf "ycf_db_pool start OK\r\n"
+		return 0
+	else
+		printf "ycf_db_pool start FAIL\r\n"
+		return 1
+	fi
+}
+
+function stopDB(){
+	#php ./src/Core/YcfHttpServer.php $pidFile;
+	php ./src/Core/YcfDBPool.php stop;
+  
+	#printf $?
+	if [ $? == 0 ]; then
+		printf "ycf_db_pool stop OK\r\n"
+		return 0
+	else
+		printf "ycf_db_pool stop FAIL\r\n"
+		return 1
+	fi
 }
 
 
@@ -40,9 +67,19 @@ case $1 in
 	
 	start )
 		start
+		#sleep 1
+		#startDB
 	;;
 	stop)
 		stop
+		#sleep 1
+		#stopDB
+	;;
+	startDB )
+		startDB
+	;;
+	stopDB)
+		stopDB
 	;;
 	restart)
 		stop

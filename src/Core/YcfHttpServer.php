@@ -26,7 +26,7 @@ class YcfHttpServer
         $this->http->set(
             array(
                 'worker_num'      => 2,
-                'daemonize'       => false,
+                'daemonize'       => true,
                 'max_request'     => 1,
                 'task_worker_num' => 2,
                 'log_file'        => LOG_PATH . 'swoole.log',
@@ -35,6 +35,7 @@ class YcfHttpServer
         );
 
         $this->http->on('WorkerStart', array($this, 'onWorkerStart'));
+        $this->http->on('Start', array($this, 'onStart'));
 
         $this->http->on('request', function ($request, $response) {
             //捕获异常
@@ -80,7 +81,7 @@ class YcfHttpServer
             }
             $result = ob_get_contents();
             ob_end_clean();
-            YcfCore::$_response->end($result);
+            YcfCore::end($result);
             unset($result);
         });
 
@@ -89,7 +90,13 @@ class YcfHttpServer
 
         $this->http->start();
     }
+    public function onStart()
+    {
+        //echo "start_master_pid: " . $this->http->master_pid . "\n";
+        //echo "start_manager_pid: " . $this->http->manager_pid . "\n";
+        file_put_contents(LOG_PATH . 'master.pid', $this->http->master_pid);
 
+    }
     public function onWorkerStart()
     {
         date_default_timezone_set('Asia/Shanghai');
@@ -98,11 +105,10 @@ class YcfHttpServer
         define('DS', DIRECTORY_SEPARATOR);
         define('ROOT_PATH', realpath(dirname(__FILE__)) . DS . ".." . DS . ".." . DS);
         define('YCF_BEGIN_TIME', microtime(true));
-        echo ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master_pid' . "\n";
-        echo $this->http->master_pid . "\n";
-        file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master_pid', $this->http->master_pid);
+        //echo "master_pid: " . $this->http->master_pid . "\n";
+        //file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master.pid', $this->http->master_pid);
         //echo 'worker start....';
-        require 'vendor/autoload.php';
+        require ROOT_PATH . 'vendor/autoload.php';
 
     }
     public function onTask($serv, $task_id, $from_id, $data)
