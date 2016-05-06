@@ -25,9 +25,9 @@ class YcfHttpServer
 
         $this->http->set(
             array(
-                'worker_num'      => 2,
+                'worker_num'      => 10,
                 'daemonize'       => true,
-                'max_request'     => 1,
+                'max_request'     => 10000,
                 'task_worker_num' => 2,
                 'log_file'        => LOG_PATH . 'swoole.log',
                 //'dispatch_mode' => 1,
@@ -68,13 +68,14 @@ class YcfHttpServer
             if (isset($request->request_uri)) {
                 $_SERVER['REQUEST_URI'] = $request->request_uri;
             }
-            $GLOBALS['http_server'] = $this->http;
+            //$GLOBALS['http_server'] = $this->http;
             ob_start();
             //实例化ycf对象
             try {
-                $ycf                = new YcfCore;
-                YcfCore::$_response = $response;
-                $ycf->init($this->http);
+                $ycf                   = new YcfCore;
+                YcfCore::$_response    = $response;
+                YcfCore::$_http_server = $this->http;
+                $ycf->init();
                 $ycf->run();
             } catch (Exception $e) {
                 var_dump($e);

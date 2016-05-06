@@ -17,9 +17,9 @@ class YcfCore
         self::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
         self::$_log = new YcfLog();
-        if (!empty($httpServer)) {
-            self::$_http_server = $httpServer;
-        }
+        // if (!empty($httpServer)) {
+        //     self::$_http_server = $httpServer;
+        // }
     }
     //封装输出，避免多次输出
     public static function end($msg)
