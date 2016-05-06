@@ -19,6 +19,8 @@ class YcfHttpServer
 
     public function __construct()
     {
+        define('LOG_PATH', realpath(dirname(__FILE__)) . "/../runtime/");
+
         $this->http = new \swoole_http_server("0.0.0.0", 9501);
 
         $this->http->set(
@@ -27,6 +29,7 @@ class YcfHttpServer
                 'daemonize'       => false,
                 'max_request'     => 1,
                 'task_worker_num' => 2,
+                'log_file'        => LOG_PATH . 'swoole.log',
                 //'dispatch_mode' => 1,
             )
         );
@@ -93,8 +96,11 @@ class YcfHttpServer
         define('DEBUG', true);
         define('SWOOLE', true);
         define('DS', DIRECTORY_SEPARATOR);
-        define('ROOT_PATH', realpath(dirname(__FILE__)) . DS . "../.." . DS);
+        define('ROOT_PATH', realpath(dirname(__FILE__)) . DS . ".." . DS . ".." . DS);
         define('YCF_BEGIN_TIME', microtime(true));
+        echo ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master_pid' . "\n";
+        echo $this->http->master_pid . "\n";
+        file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master_pid', $this->http->master_pid);
         //echo 'worker start....';
         require 'vendor/autoload.php';
 
