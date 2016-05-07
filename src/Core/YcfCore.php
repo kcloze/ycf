@@ -14,7 +14,7 @@ class YcfCore
 
     public function init($httpServer = null)
     {
-        self::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
+        // self::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
         self::$_log = new YcfLog();
         // if (!empty($httpServer)) {

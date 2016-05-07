@@ -19,6 +19,9 @@ function stop(){
 	master_pid=$(php -r "echo file_get_contents(realpath(dirname(__FILE__)) . '/src/runtime/master.pid');");
 	if [ -n "$master_pid" ];then
 		kill -15 $master_pid;
+		sleep 1;
+		kill -9 $master_pid;
+		sleep 1;
 		if [ $? == 0 ];then
 			#php ./src/Core/YcfDBPool.php stop
 			php -r "file_put_contents(realpath(dirname(__FILE__)) . '/src/runtime/master.pid','');"

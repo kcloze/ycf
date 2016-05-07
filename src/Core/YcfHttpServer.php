@@ -110,6 +110,7 @@ class YcfHttpServer
         //file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master.pid', $this->http->master_pid);
         //echo 'worker start....';
         require ROOT_PATH . 'vendor/autoload.php';
+        YcfCore::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
     }
     public function onTask($serv, $task_id, $from_id, $data)
