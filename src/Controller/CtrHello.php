@@ -9,7 +9,7 @@ class CtrHello
     public function actionIndex()
     {
         //echo "hello ycf, it is time: " . time();
-        YcfCore::$response->end("Greet, Klcoze!");
+        YcfCore::$response->end("Greet, Klcoze! 123333");
 
     }
     public function actionHello()
@@ -20,7 +20,7 @@ class CtrHello
     }
     public function actionCache()
     {
-        YcfCore::$cache->set('kcloze', time() . "_ooo_", 3600);
+        YcfCore::$cache->set('kcloze', time() . "_ooo_123", 3600);
 
         var_dump(YcfCore::$cache->get('kcloze'));
     }

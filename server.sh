@@ -34,6 +34,21 @@ function stop(){
 	fi
 	
 }
+
+function reload(){
+	master_pid=$(php -r "echo file_get_contents(realpath(dirname(__FILE__)) . '/src/runtime/master.pid');");
+	if [ -n "$master_pid" ];then
+		kill -SIGUSR1 $master_pid;
+		if [ $? == 0 ];then
+			printf "ycf_server reload OK \n"
+			return 0
+		fi
+	else
+		printf "ycf_server reload FAIL\r\n"
+		return 1	
+	fi
+
+}
 function startDB(){
 	#php ./src/Core/YcfHttpServer.php $pidFile;
 	php ./src/Core/YcfDBPool.php start;
@@ -77,6 +92,9 @@ case $1 in
 		stop
 		#sleep 1
 		#stopDB
+	;;
+	reload )
+		reload
 	;;
 	startDB )
 		startDB

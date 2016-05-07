@@ -29,16 +29,17 @@ class YcfHttpServer
 
         $this->http->set(
             array(
-                'worker_num'      => 10,
+                'worker_num'      => 2,
                 'daemonize'       => true,
-                'max_request'     => 10000,
-                'task_worker_num' => 2,
-                'log_file'        => ROOT_PATH . '／src/runtime/swoole.log',
+                'max_request'     => 1,
+                'task_worker_num' => 1,
+                'log_file'        => ROOT_PATH . 'src/runtime/swoole.log',
                 //'dispatch_mode' => 1,
             )
         );
 
         $this->http->on('WorkerStart', array($this, 'onWorkerStart'));
+        $this->http->on('WorkerStop', array($this, 'onWorkerStop'));
         $this->http->on('Start', array($this, 'onStart'));
 
         $this->http->on('request', function ($request, $response) {
@@ -109,6 +110,10 @@ class YcfHttpServer
         require ROOT_PATH . 'vendor/autoload.php';
         YcfCore::$settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
+    }
+    public function onWorkerStop()
+    {
+        opcache_reset(); //清空zend_opcache的缓存
     }
     public function onTask($serv, $task_id, $from_id, $data)
     {
