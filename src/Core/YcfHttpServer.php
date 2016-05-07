@@ -19,7 +19,11 @@ class YcfHttpServer
 
     public function __construct()
     {
-        define('LOG_PATH', realpath(dirname(__FILE__)) . "/../runtime/");
+        date_default_timezone_set('Asia/Shanghai');
+        define('DEBUG', true);
+        define('SWOOLE', true);
+        define('DS', DIRECTORY_SEPARATOR);
+        define('ROOT_PATH', realpath(dirname(__FILE__)) . DS . ".." . DS . ".." . DS);
 
         $this->http = new \swoole_http_server("0.0.0.0", 9501);
 
@@ -29,7 +33,7 @@ class YcfHttpServer
                 'daemonize'       => true,
                 'max_request'     => 10000,
                 'task_worker_num' => 2,
-                'log_file'        => LOG_PATH . 'swoole.log',
+                'log_file'        => ROOT_PATH . '／src/runtime/swoole.log',
                 //'dispatch_mode' => 1,
             )
         );
@@ -38,6 +42,7 @@ class YcfHttpServer
         $this->http->on('Start', array($this, 'onStart'));
 
         $this->http->on('request', function ($request, $response) {
+            define('YCF_BEGIN_TIME', microtime(true));
             //捕获异常
             register_shutdown_function(array($this, 'handleFatal'));
             //请求过滤
@@ -100,15 +105,7 @@ class YcfHttpServer
     }
     public function onWorkerStart()
     {
-        date_default_timezone_set('Asia/Shanghai');
-        define('DEBUG', true);
-        define('SWOOLE', true);
-        define('DS', DIRECTORY_SEPARATOR);
-        define('ROOT_PATH', realpath(dirname(__FILE__)) . DS . ".." . DS . ".." . DS);
-        define('YCF_BEGIN_TIME', microtime(true));
-        //echo "master_pid: " . $this->http->master_pid . "\n";
-        //file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master.pid', $this->http->master_pid);
-        //echo 'worker start....';
+
         require ROOT_PATH . 'vendor/autoload.php';
         YcfCore::$settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
