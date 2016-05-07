@@ -100,7 +100,7 @@ class YcfHttpServer
     {
         //echo "start_master_pid: " . $this->http->master_pid . "\n";
         //echo "start_manager_pid: " . $this->http->manager_pid . "\n";
-        file_put_contents(LOG_PATH . 'master.pid', $this->http->master_pid);
+        file_put_contents(ROOT_PATH . 'src/runtime/master.pid', $this->http->master_pid);
 
     }
     public function onWorkerStart()

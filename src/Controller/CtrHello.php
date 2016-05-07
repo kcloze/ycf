@@ -8,8 +8,8 @@ class CtrHello
 
     public function actionIndex()
     {
-        echo "hello ycf, it is time: " . time();
-        //YcfCore::$response->end("Greet, Klcoze!");
+        //echo "hello ycf, it is time: " . time();
+        YcfCore::$response->end("Greet, Klcoze!");
 
     }
     public function actionHello()
@@ -45,6 +45,9 @@ class CtrHello
     {
         //for ($i = 0; $i < 1000; $i++) {
         YcfCore::$log->log('hello ycf' . time(), 'info');
+        YcfCore::$log->log('hello 123' . time(), 'info');
+        YcfCore::$log->log('hello 123' . time(), 'info');
+        YcfCore::$log->log('hello 123' . time(), 'info');
         YcfCore::end("Greet, Klcoze!");
         //}
     }

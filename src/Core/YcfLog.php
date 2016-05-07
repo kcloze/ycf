@@ -30,13 +30,15 @@ class YcfLog
 
     public function processLogs()
     {
-        $logsAll["application"] = "[" . $_SERVER['REQUEST_URI'] . "] " . "[runing time]: " . (microtime(true) - YCF_BEGIN_TIME) . "\n";
+        $this->log("[" . $_SERVER['REQUEST_URI'] . "] " . "[runing time]: " . (microtime(true) - YCF_BEGIN_TIME) . "\n");
         foreach ((array) $this->logs as $key => $logs) {
             $logsAll[$key] = '';
             foreach ((array) $logs as $log) {
                 $logsAll[$key] .= $this->formatLogMessage($log[0], $log[1], $log[2], $log[3]);
             }
         }
+        //file_put_contents(ROOT_PATH . 'src/runtime/swoole.log', serialize($logsAll));
+        //var_dump($logsAll);
         return $logsAll;
     }
     /**
