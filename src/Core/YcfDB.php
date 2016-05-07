@@ -325,7 +325,7 @@ class YcfDB
             $message .= "\r\nRaw SQL : " . $sql;
         }
         # Write into log
-        YcfCore::$_log->log($message, 'error', 'db');
+        YcfCore::$log->log($message, 'error', 'db');
 
         return $exception;
     }

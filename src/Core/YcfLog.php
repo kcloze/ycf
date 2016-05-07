@@ -8,11 +8,11 @@ class YcfLog
     const LEVEL_ERROR   = 'error';
     const LEVEL_INFO    = 'info';
     const LEVEL_PROFILE = 'profile';
-    const MAX_LOGS      = 10000;
+    const MAXLOGS       = 10000;
     //单个类型log
-    private $_logs     = array();
-    private $_logCount = 0;
-    private $_logPath  = '';
+    private $logs     = array();
+    private $logCount = 0;
+    private $logPath  = '';
 
     public function formatLogMessage($message, $level, $category, $time)
     {
@@ -21,9 +21,9 @@ class YcfLog
 
     public function log($message, $level = 'info', $category = 'application', $flush = false)
     {
-        $this->_logs[$category][] = array($message, $level, $category, microtime(true));
-        $this->_logCount++;
-        if ($this->_logCount >= YcfLog::MAX_LOGS || true == $flush) {
+        $this->logs[$category][] = array($message, $level, $category, microtime(true));
+        $this->logCount++;
+        if ($this->logCount >= YcfLog::MAXLOGS || true == $flush) {
             $this->flush($category);
         }
     }
@@ -31,7 +31,7 @@ class YcfLog
     public function processLogs()
     {
         $logsAll["application"] = "[" . $_SERVER['REQUEST_URI'] . "] " . "[runing time]: " . (microtime(true) - YCF_BEGIN_TIME) . "\n";
-        foreach ((array) $this->_logs as $key => $logs) {
+        foreach ((array) $this->logs as $key => $logs) {
             $logsAll[$key] = '';
             foreach ((array) $logs as $log) {
                 $logsAll[$key] .= $this->formatLogMessage($log[0], $log[1], $log[2], $log[3]);
@@ -46,13 +46,13 @@ class YcfLog
     public function flush()
     {
 
-        if ($this->_logCount <= 0) {
+        if ($this->logCount <= 0) {
             return false;
         }
         $logsAll = $this->processLogs();
         $this->write($logsAll);
-        $this->_logs     = array();
-        $this->_logCount = 0;
+        $this->logs     = array();
+        $this->logCount = 0;
     }
     //异步任务写日志
     public function sendTask()
@@ -66,7 +66,7 @@ class YcfLog
             'name'    => '日志处理',
             'content' => $logsAll,
         );
-        $taskId = YcfCore::$_http_server->task(json_encode($param));
+        $taskId = YcfCore::$httpServer->task(json_encode($param));
 
     }
     /**
@@ -79,15 +79,15 @@ class YcfLog
             return;
         }
 
-        $this->_logPath = ROOT_PATH . 'src/runtime/';
-        if (!is_dir($this->_logPath)) {
-            self::mkdir($this->_logPath, array(), true);
+        $this->logPath = ROOT_PATH . 'src/runtime/';
+        if (!is_dir($this->logPath)) {
+            self::mkdir($this->logPath, array(), true);
         }
         foreach ($logsAll as $key => $value) {
             if (empty($key)) {
                 continue;
             }
-            $fileName = $this->_logPath . $key . '.log';
+            $fileName = $this->logPath . $key . '.log';
             $fp2      = @fopen($fileName, "a+") or YcfUtils::exitMsg("Log fatal Error !");
             @fwrite($fp2, $value);
             @fclose($fp2);

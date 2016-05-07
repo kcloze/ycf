@@ -68,13 +68,13 @@ class YcfHttpServer
             if (isset($request->request_uri)) {
                 $_SERVER['REQUEST_URI'] = $request->request_uri;
             }
-            //$GLOBALS['http_server'] = $this->http;
+            //$GLOBALS['httpServer'] = $this->http;
             ob_start();
             //实例化ycf对象
             try {
-                $ycf                   = new YcfCore;
-                YcfCore::$_response    = $response;
-                YcfCore::$_http_server = $this->http;
+                $ycf                 = new YcfCore;
+                YcfCore::$response   = $response;
+                YcfCore::$httpServer = $this->http;
                 $ycf->init();
                 $ycf->run();
             } catch (Exception $e) {
@@ -110,7 +110,7 @@ class YcfHttpServer
         //file_put_contents(ROOT_PATH . 'src' . DS . 'runtime' . DS . 'master.pid', $this->http->master_pid);
         //echo 'worker start....';
         require ROOT_PATH . 'vendor/autoload.php';
-        YcfCore::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
+        YcfCore::$settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
 
     }
     public function onTask($serv, $task_id, $from_id, $data)
@@ -171,11 +171,11 @@ class YcfHttpServer
         if (isset($_SERVER['REQUEST_URI'])) {
             $log .= '[QUERY] ' . $_SERVER['REQUEST_URI'];
         }
-        YcfCore::$_log->log($log, 'fatal');
-        YcfCore::$_log->sendTask();
-        if (YcfCore::$_response) {
-            YcfCore::$_response->status(500);
-            YcfCore::$_response->end('程序异常');
+        YcfCore::$log->log($log, 'fatal');
+        YcfCore::$log->sendTask();
+        if (YcfCore::$response) {
+            YcfCore::$response->status(500);
+            YcfCore::$response->end('程序异常');
         }
 
         unset($this->response);

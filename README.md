@@ -55,7 +55,24 @@ run with swoole:
  * [DB Class Use](doc/db.md)
  * if you need redis,shoud install phpredis extention(https://github.com/phpredis/phpredis)
 
+##How to use Task
+```
+public function actionTask()
+    {
+        // send a task to task worker.
+        $param = array(
+            'action' => 'test',
+            'time'   => time(),
+        );
+        //var_dump(HttpServer::getInstance()->http);
+        //$this->http->task(json_encode($param));
+        for ($i = 0; $i < 1; $i++) {
+            $taskId = YcfCore::$_http_server->task(json_encode($param));
+        }
+        echo $taskId . " hello ycf" . time();
 
+    }
+```
 
 ## Benchmarks
 [benchmarks](doc/benchmarks.md)

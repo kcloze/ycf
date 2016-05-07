@@ -10,9 +10,9 @@ class CtrPdo
     public function actionTest()
     {
         $modelTest = new ModelPdo();
-        /*$result    = $modelTest->testInsert();
+        $result    = $modelTest->testInsert();
         var_dump($result);
-         */
+
         $result = $modelTest->testQuery();
         var_dump($result);
     }
