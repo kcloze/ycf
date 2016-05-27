@@ -2,31 +2,32 @@
 
 namespace Ycf\Core;
 
+use Ycf\Core\YcfCache;
 use Ycf\Core\YcfLog;
 
 class YcfCore
 {
 
-    static $_settings    = array();
-    static $_response    = null;
-    static $_log         = null;
-    static $_http_server = null;
+    static $settings   = array();
+    static $response   = null;
+    static $log        = null;
+    static $cache      = null;
+    static $httpServer = null;
 
     public function init($httpServer = null)
     {
-        self::$_settings = parse_ini_file(ROOT_PATH . "src/config/settings.ini.php", true);
+        self::$log = new YcfLog();
+        if (isset(self::$settings["Redis"])) {
+            self::$cache = new YcfCache();
+        }
 
-        self::$_log = new YcfLog();
-        // if (!empty($httpServer)) {
-        //     self::$_http_server = $httpServer;
-        // }
     }
     //封装输出，避免多次输出
     public static function end($msg)
     {
-        if (self::$_response) {
-            self::$_response->end($msg);
-            self::$_response = null;
+        if (self::$response) {
+            self::$response->end($msg);
+            self::$response = null;
         }
     }
     public function run()
@@ -58,11 +59,11 @@ class YcfCore
     public function shutdown()
     {
         //echo 'shutdown....';
-        self::$_log->flush();
+        self::$log->flush();
         // if (!defined('SWOOLE')) {
-        //     self::$_log->flush();
+        //     self::$log->flush();
         // } else {
-        //     self::$_log->sendTask();
+        //     self::$log->sendTask();
         // }
     }
 

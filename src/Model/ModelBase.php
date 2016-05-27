@@ -7,20 +7,20 @@ use Ycf\Core\YcfRedis;
 
 class ModelBase
 {
-    protected $_db    = null;
-    protected $_redis = null;
+    protected $db    = null;
+    protected $redis = null;
     public function __construct()
     {
-        $this->_db = $this->load('_db');
+        $this->db = $this->load('db');
     }
 
     protected function load($obj)
     {
         switch ($obj) {
-            case '_db':
+            case 'db':
                 return $this->getDbInstance();
                 break;
-            case '_redis':
+            case 'redis':
                 return $this->getRedisInstance();
                 break;
             default:
@@ -31,10 +31,10 @@ class ModelBase
     protected function getDbInstance()
     {
         // Create Mysql Client instance with you configuration settings
-        if (null == $this->_db) {
-            $this->_db = new YcfDB(YcfCore::$_settings['Mysql']);
+        if (null == $this->db) {
+            $this->db = new YcfDB(YcfCore::$settings['Mysql']);
         }
-        return $this->_db;
+        return $this->db;
     }
     protected function getRedisInstance()
     {
@@ -43,7 +43,7 @@ class ModelBase
             return null;
         }
         // Create Redis Client instance with you configuration settings
-        $this->_redis = new YcfRedis(YcfCore::$_settings['Redis']);
-        return $this->_redis;
+        $this->redis = new YcfRedis(YcfCore::$settings['Redis']);
+        return $this->redis;
     }
 }

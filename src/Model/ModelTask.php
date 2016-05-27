@@ -39,7 +39,7 @@ class ModelTask
     public static function flushLogTask($serv, $task_id, $from_id, $data)
     {
         if (isset($data['content'])) {
-            YcfCore::$_log && YcfCore::$_log->write($data['content']);
+            YcfCore::$log && YcfCore::$log->write($data['content']);
         }
         echo "Task {$task_id} have done";
 

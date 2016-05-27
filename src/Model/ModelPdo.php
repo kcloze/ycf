@@ -10,9 +10,9 @@ class ModelPdo extends ModelBase
     {
         $data['pName']  = 'fww';
         $data['pValue'] = '总过万佛无法';
-        $insert         = $this->_db->query("INSERT INTO pdo_test( pName,pValue) VALUES ( :pName,:pValue)", $data);
+        $insert         = $this->db->query("INSERT INTO pdo_test( pName,pValue) VALUES ( :pName,:pValue)", $data);
         if ($insert > 0) {
-            echo $this->_db->lastInsertId() . "\r\n";
+            echo $this->db->lastInsertId() . "\r\n";
         } else {
             echo false . "\r\n";
         }
@@ -21,7 +21,7 @@ class ModelPdo extends ModelBase
 
     public function testQuery()
     {
-        return $this->_db->query("select  *  from pdo_test limit 1");
+        return $this->db->query("select  *  from pdo_test limit 1");
 
     }
 
