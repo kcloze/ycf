@@ -17,8 +17,7 @@
 1. git clone https://github.com/kcloze/ycf.git your-app
 2. cd your-app and run: composer install
 2. chmod -R 777 src/runtime/
-3. cp doc/settings.ini.php  src/Core/settings.ini.php
-4. edit src/Core/settings.ini.php for mysql config or redis,add test table(https://github.com/kcloze/ycf/blob/master/pdo_test.sql)
+3. edit src/config/settings.ini.php for mysql config or redis,add test table(https://github.com/kcloze/ycf/blob/master/pdo_test.sql)
 
 ## How to run
 
